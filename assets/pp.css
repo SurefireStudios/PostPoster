@@ -227,6 +227,32 @@
     flex: 0 0 35%; /* Slightly smaller for 1 column to give more text space */
 }
 
+/* Better sizing for 1x1 aspect ratio images in 2-column layout */
+@media (min-width: 640px) {
+    .pp-cols-2 .pp-card-image .pp-ratio-1x1 {
+        aspect-ratio: 1 / 1;
+        width: 100%;
+        height: auto;
+        max-height: none; /* Remove height constraint to prevent cropping */
+    }
+    
+    /* Ensure images inside 1x1 containers fill the entire area properly */
+    .pp-cols-2 .pp-card-image .pp-ratio-1x1 img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Scale image to fill container while maintaining aspect ratio */
+        object-position: center; /* Center the image within the container */
+    }
+    
+    /* Make 2-column image containers more proportional for square images */
+    .pp-cols-2 .pp-card-image {
+        flex: 0 0 min(45%, 220px); /* Slightly larger to accommodate square images better */
+        max-width: 220px;
+        height: auto; /* Let height be determined by content */
+        align-items: flex-start; /* Align to top instead of stretching */
+    }
+}
+
 /* Make the image wrapper and link fill full height */
 .pp-cols-1 .pp-card-image .pp-image-wrapper,
 .pp-cols-2 .pp-card-image .pp-image-wrapper,
@@ -235,6 +261,15 @@
     height: 100%;
     display: flex;
     align-items: stretch;
+}
+
+/* For 2-column layout, adjust wrapper for better 1x1 image display */
+@media (min-width: 640px) {
+    .pp-cols-2 .pp-card-image .pp-image-wrapper,
+    .pp-cols-2 .pp-card-image a {
+        height: auto; /* Let height be determined by content */
+        display: block; /* Simpler display for better aspect ratio handling */
+    }
 }
 
 /* Reset on mobile */
@@ -291,6 +326,16 @@
     aspect-ratio: 1 / 1;
 }
 
+/* Ensure all images within aspect ratio containers fill properly */
+.pp-ratio-1x1 img,
+.pp-ratio-4x3 img,
+.pp-ratio-16x9 img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
 /* Fallback for older browsers */
 @supports not (aspect-ratio: 1) {
     .pp-ratio-16x9 {
@@ -313,6 +358,8 @@
         left: 0;
         width: 100%;
         height: 100%;
+        object-fit: cover;
+        object-position: center;
     }
 }
 
