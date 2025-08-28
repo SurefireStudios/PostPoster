@@ -306,7 +306,15 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center; /* Ensure images are centered */
     transition: transform 0.3s ease;
+}
+
+/* Override for aspect ratio containers to ensure proper sizing */
+.pp-ratio-1x1.pp-image-wrapper img,
+.pp-ratio-4x3.pp-image-wrapper img,
+.pp-ratio-16x9.pp-image-wrapper img {
+    height: 100%; /* Maintain full height for aspect ratio containers */
 }
 
 .pp-card:hover .pp-image-wrapper img {
@@ -336,6 +344,58 @@
     object-position: center;
 }
 
+/* Specific fixes for vertical layout (3 and 4 column) aspect ratio images */
+@media (min-width: 900px) {
+    .pp-cols-3 .pp-card-image .pp-image-wrapper,
+    .pp-cols-4 .pp-card-image .pp-image-wrapper {
+        display: block; /* Ensure proper display for aspect ratio containers */
+    }
+    
+    .pp-cols-3 .pp-card-image .pp-ratio-1x1,
+    .pp-cols-4 .pp-card-image .pp-ratio-1x1 {
+        aspect-ratio: 1 / 1;
+        width: 100%;
+        height: auto; /* Let aspect ratio determine height */
+        display: block;
+        overflow: hidden;
+        position: relative; /* Ensure proper positioning for absolute images */
+    }
+    
+    .pp-cols-3 .pp-card-image .pp-ratio-1x1 img,
+    .pp-cols-4 .pp-card-image .pp-ratio-1x1 img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* This ensures landscape images scale to fill the 1x1 area */
+        object-position: center; /* Center the image within the container */
+        display: block;
+        position: absolute; /* Use absolute positioning for better coverage */
+        top: 0;
+        left: 0;
+    }
+    
+    /* Ensure all aspect ratio containers in 3 and 4 column layouts cover properly */
+    .pp-cols-3 .pp-card-image .pp-ratio-4x3,
+    .pp-cols-4 .pp-card-image .pp-ratio-4x3,
+    .pp-cols-3 .pp-card-image .pp-ratio-16x9,
+    .pp-cols-4 .pp-card-image .pp-ratio-16x9 {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .pp-cols-3 .pp-card-image .pp-ratio-4x3 img,
+    .pp-cols-4 .pp-card-image .pp-ratio-4x3 img,
+    .pp-cols-3 .pp-card-image .pp-ratio-16x9 img,
+    .pp-cols-4 .pp-card-image .pp-ratio-16x9 img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+}
+
 /* Fallback for older browsers */
 @supports not (aspect-ratio: 1) {
     .pp-ratio-16x9 {
@@ -360,6 +420,29 @@
         height: 100%;
         object-fit: cover;
         object-position: center;
+    }
+    
+    /* Fallback for 3 and 4 column layouts */
+    @media (min-width: 900px) {
+        .pp-cols-3 .pp-card-image .pp-ratio-1x1,
+        .pp-cols-4 .pp-card-image .pp-ratio-1x1 {
+            position: relative;
+        }
+        
+        .pp-cols-3 .pp-card-image .pp-ratio-1x1 img,
+        .pp-cols-4 .pp-card-image .pp-ratio-1x1 img,
+        .pp-cols-3 .pp-card-image .pp-ratio-4x3 img,
+        .pp-cols-4 .pp-card-image .pp-ratio-4x3 img,
+        .pp-cols-3 .pp-card-image .pp-ratio-16x9 img,
+        .pp-cols-4 .pp-card-image .pp-ratio-16x9 img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
     }
 }
 
