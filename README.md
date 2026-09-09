@@ -1,133 +1,191 @@
-# Post Poster WordPress Plugin
+<div align="center">
 
-A powerful WordPress plugin that lets you create layout grids from existing blog posts with customizable shortcodes and grid options. Display your posts in beautiful, responsive grid layouts with full control over appearance and content.
+# Post Poster
 
-## Features
+**Turn the posts you already have into responsive grid layouts — with a shortcode, a Gutenberg block, or a point-and-click generator in the WordPress admin.**
 
-- **Flexible Grid Layouts**: 1-4 column responsive grids
-- **Smart Content Selection**: Filter by categories, order by date/title/popularity
-- **Customizable Display**: Toggle images, titles, excerpts with adjustable length
-- **Multiple Image Ratios**: 16:9, 4:3, 1:1, or auto
-- **Performance Optimized**: Built-in caching, lazy loading, efficient queries
-- **Gutenberg Block**: Native block editor support with live preview
-- **Theme Integration**: Template override support, theme-agnostic styling
-- **Accessibility**: Semantic markup, proper ARIA labels, keyboard navigation
-- **Developer Friendly**: Hooks, filters, and extensible architecture
+[![License](https://img.shields.io/github/license/SurefireStudios/PostPoster?color=blue)](LICENSE)
+[![Version 1.0.0](https://img.shields.io/badge/version-1.0.0-0d9488)](post-poster.php)
+[![WordPress 6.0+](https://img.shields.io/badge/WordPress-6.0%2B-21759b?logo=wordpress&logoColor=white)](https://wordpress.org)
+[![PHP 7.4+](https://img.shields.io/badge/PHP-7.4%2B-777bb4?logo=php&logoColor=white)](https://www.php.net)
+[![Stars](https://img.shields.io/github/stars/SurefireStudios/PostPoster?style=flat)](https://github.com/SurefireStudios/PostPoster/stargazers)
 
-## Installation
+Built by **[Surefire Studios](https://www.surefirestudios.io)**
 
-1. Upload the `post-poster` folder to `/wp-content/plugins/`
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to **Settings → Post Poster** to configure and generate shortcodes
+</div>
 
-## Basic Usage
+---
 
-### Using the Admin Interface
+## What it does
 
-1. Navigate to **Settings → Post Poster** in your WordPress admin
-2. Configure your desired settings:
-   - Select categories to include
-   - Choose number of columns (1-4)
-   - Set posts per page
-   - Toggle display options (image, title, excerpt)
-   - Adjust layout settings (gutter, image ratio)
-3. Click **"Generate Shortcode"** to create your shortcode
-4. Copy and paste the shortcode into any page or post
+Point Post Poster at some categories, pick a column count, and drop the shortcode on a page.
+You get a responsive card grid of your existing posts — featured image, title, excerpt, date,
+author and categories, each toggleable — with numeric pagination or an AJAX *Load More*
+button.
 
-### Using the Gutenberg Block
+Nothing is duplicated: the grid is a `WP_Query` over your existing posts, cached in a
+transient, rendered through templates your theme can override.
 
-1. In the block editor, add the **"Post Poster Grid"** block
-2. Configure settings in the block sidebar
-3. See live preview in the editor
-4. Publish your page
+---
 
-## Shortcode Reference
+## ✨ Features
 
-### Basic Shortcode
+- **Flexible grid layouts** — 1–4 responsive columns with a configurable gutter
+- **Smart content selection** — filter by category, order by date, title, modified, random, comment count or menu order
+- **Customisable cards** — toggle image, title, excerpt, date, author and categories independently, with adjustable excerpt length
+- **Multiple image ratios** — `16x9`, `4x3`, `1x1`, or `auto`
+- **Three pagination modes** — none, numeric links, or an AJAX **Load More** button
+- **Light, dark or automatic** — a `theme` option that can follow the visitor's `prefers-color-scheme`
+- **Shortcode generator** — build a shortcode from a form in the admin, with a live preview and copy-to-clipboard
+- **Gutenberg block** — *Post Poster Grid*, with a live preview and sidebar controls
+- **Built-in caching** — query results stored in transients, per-shortcode duration
+- **Theme integration** — override any template from your theme; scoped `pp-` CSS classes
+- **Accessibility** — semantic markup, ARIA labels, keyboard navigation
+- **Developer friendly** — actions and filters, plus a file of worked examples
+- **Translation-ready** — `languages/post-poster.pot` included
+- **Clean uninstall** — removes its options, user meta and cached queries on delete
+
+---
+
+## 📦 Requirements
+
+- WordPress **6.0** or higher (tested up to 6.4)
+- PHP **7.4** or higher
+- A theme with CSS Grid support (any modern theme)
+
+---
+
+## 🚀 Installation
+
+1. Download this repository as a ZIP (**Code → Download ZIP**), or clone it:
+   ```bash
+   git clone https://github.com/SurefireStudios/PostPoster.git post-poster
+   ```
+2. Place the folder in `wp-content/plugins/` so you end up with
+   `wp-content/plugins/post-poster/post-poster.php`.
+3. Activate **Post Poster** under **Plugins** in the WordPress admin.
+4. A **Post Poster** item appears in the admin sidebar.
+
+Uploading the GitHub ZIP through **Plugins → Add New → Upload Plugin** also works — WordPress
+just names the folder `PostPoster-main`, which is harmless.
+
+---
+
+## 📖 Usage
+
+### Using the shortcode generator
+
+1. Open **Post Poster** in the WordPress admin sidebar (it's a top-level menu, below Comments).
+2. Configure what you want: categories, columns, posts per page, display toggles, image ratio,
+   gutter, pagination and cache duration.
+3. Click **Preview** to render the grid right there, or **Generate Shortcode**.
+4. Hit **Copy** and paste the shortcode into any page or post.
+
+### Using the Gutenberg block
+
+1. In the block editor, add the **Post Poster Grid** block.
+2. Configure it in the block sidebar — Content Selection, Layout, Display and Advanced.
+3. The editor shows a live preview as you change settings.
+
+### Using the shortcode directly
 
 ```
 [pp_posts]
 ```
 
-### Full Example
+A fuller example:
 
 ```
 [pp_posts categories="news,features" columns="3" per_page="9" show_image="true" show_title="true" show_excerpt="true" excerpt_words="22" orderby="date" order="DESC" pagination="numeric" image_ratio="16x9" gutter="16" cache_minutes="60"]
 ```
 
-### Shortcode Attributes
+---
+
+## ⚙️ Shortcode attributes
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `categories` | string | `""` | Comma-separated category slugs (e.g., "news,design") |
-| `columns` | number | `3` | Number of columns (1-4) |
-| `per_page` | number | `9` | Posts per page (1-50) |
+| `categories` | string | `""` | Comma-separated category slugs (e.g. `news,design`). Empty means all categories |
+| `columns` | number | `3` | Number of columns, clamped to 1–4 |
+| `per_page` | number | `9` | Posts per page, clamped to 1–50 |
 | `show_image` | boolean | `true` | Display featured images |
 | `show_title` | boolean | `true` | Display post titles |
 | `show_excerpt` | boolean | `true` | Display post excerpts |
-| `excerpt_words` | number | `18` | Excerpt length in words (5-100) |
-| `orderby` | string | `date` | Order posts by: `date`, `title`, `modified`, `rand`, `comment_count` |
-| `order` | string | `DESC` | Sort direction: `ASC` or `DESC` |
-| `pagination` | string | `none` | Pagination type: `none` or `numeric` |
-| `image_ratio` | string | `16x9` | Image aspect ratio: `16x9`, `4x3`, `1x1`, `auto` |
-| `gutter` | number | `16` | Space between cards in pixels (0-50) |
-| `class` | string | `""` | Additional CSS class for the grid wrapper |
-| `cache_minutes` | number | `15` | Cache duration in minutes (0 to disable) |
+| `excerpt_words` | number | `18` | Excerpt length in words, clamped to 5–100 |
+| `show_date` | boolean | `true` | Display the published date |
+| `show_author` | boolean | `false` | Display the author, linked to their archive |
+| `show_categories` | boolean | `true` | Display the post's categories |
+| `orderby` | string | `date` | `date`, `title`, `modified`, `rand`, `comment_count` or `menu_order`. Anything else falls back to `date` |
+| `order` | string | `DESC` | `ASC` or `DESC` |
+| `pagination` | string | `none` | `none`, `numeric`, or `load_more` for an AJAX button |
+| `image_ratio` | string | `16x9` | `16x9`, `4x3`, `1x1` or `auto` |
+| `gutter` | number | `16` | Space between cards in pixels, clamped to 0–50 |
+| `theme` | string | `auto` | `auto` (follows `prefers-color-scheme`), `light` or `dark` |
+| `class` | string | `""` | Extra CSS class on the grid wrapper |
+| `cache_minutes` | number | `15` | Cache duration in minutes, clamped to 0–1440. `0` disables caching |
 
-## Examples
+Booleans accept `true`, `1`, `yes` or `on`; anything else is false.
 
-### News Section
+### Examples
+
+**News section**
 ```
 [pp_posts categories="news" columns="3" per_page="6" show_excerpt="true" excerpt_words="25"]
 ```
 
-### Featured Posts Grid
+**Featured posts grid**
 ```
 [pp_posts categories="featured" columns="2" per_page="4" image_ratio="4x3" gutter="24"]
 ```
 
-### Simple Title List
+**Simple title list**
 ```
 [pp_posts columns="1" show_image="false" show_excerpt="false" per_page="10"]
 ```
 
-### Random Posts Showcase
+**Random showcase, square images**
 ```
 [pp_posts orderby="rand" columns="4" per_page="8" image_ratio="1x1" gutter="12"]
 ```
 
-## Styling and Customization
-
-### CSS Classes
-
-The plugin uses scoped CSS classes that are safe to customize:
-
-- `.pp-grid` - Main grid container
-- `.pp-cols-{1-4}` - Column layout classes
-- `.pp-card` - Individual post card
-- `.pp-card-image` - Image container
-- `.pp-card-content` - Text content area
-- `.pp-card-title` - Post title
-- `.pp-card-excerpt` - Excerpt text
-- `.pp-card-meta` - Date and metadata
-
-### Template Overrides
-
-You can override plugin templates by copying them to your theme:
-
+**Infinite-style browsing with a Load More button**
 ```
-wp-content/themes/your-theme/pp/templates/card.php
-wp-content/themes/your-theme/pp/templates/wrapper-start.php
-wp-content/themes/your-theme/pp/templates/wrapper-end.php
+[pp_posts columns="3" per_page="9" pagination="load_more" show_author="true"]
 ```
 
-### Custom CSS
+**Forced dark cards**
+```
+[pp_posts columns="3" theme="dark"]
+```
 
-Add custom styles in your theme's CSS:
+---
+
+## 🎨 Styling and customisation
+
+### CSS classes
+
+The grid uses scoped `pp-` classes that are safe to target:
+
+| Class | Element |
+| --- | --- |
+| `.pp-grid` | Grid container |
+| `.pp-cols-{1-4}` | Column count |
+| `.pp-theme-{auto\|light\|dark}` | Colour scheme |
+| `.pp-card` | A single post card |
+| `.pp-card-image` | Image container |
+| `.pp-card-content` | Text content area |
+| `.pp-card-title` | Post title |
+| `.pp-card-excerpt` | Excerpt text |
+| `.pp-card-meta` | Date, author and category area |
+| `.pp-card-date` / `.pp-card-author` / `.pp-card-categories` | Individual meta items |
+| `.pp-read-more-btn` | Read-more link |
+| `.pp-no-posts` | Empty-result message |
+
+The gutter is exposed as a custom property on the wrapper, so you can override it in CSS:
 
 ```css
 .pp-grid {
-    --pp-gutter: 20px; /* Custom gutter size */
+    --pp-gutter: 20px;
 }
 
 .pp-card {
@@ -141,115 +199,166 @@ Add custom styles in your theme's CSS:
 }
 ```
 
-## Developer Hooks
+### Template overrides
+
+Copy any template into your theme to take control of the markup. Child themes are checked
+first, then the parent theme:
+
+```
+wp-content/themes/your-theme/pp/templates/card.php
+wp-content/themes/your-theme/pp/templates/wrapper-start.php
+wp-content/themes/your-theme/pp/templates/wrapper-end.php
+```
+
+---
+
+## 🧑‍💻 Developer hooks
 
 ### Actions
 
 ```php
-// Before grid starts
+// Before the grid opens
 do_action('pp_before_grid', $atts);
 
-// After grid ends  
+// After the grid closes
 do_action('pp_after_grid', $atts);
 
-// Additional card content
+// Extra content inside each card
 do_action('pp_card_content', $post, $atts);
 ```
 
 ### Filters
 
 ```php
-// Modify query arguments
-add_filter('pp_query_args', function($args, $atts) {
-    // Customize WP_Query arguments
+// Modify the WP_Query arguments
+add_filter('pp_query_args', function ($args, $atts) {
     return $args;
 }, 10, 2);
 
-// Customize no posts message
-add_filter('pp_no_posts_message', function($message) {
-    return 'Custom no posts message';
+// Customise the "no posts" message
+add_filter('pp_no_posts_message', function ($message) {
+    return 'Nothing here yet.';
 });
 ```
 
-## Performance
+📄 **[`examples/usage-examples.php`](examples/usage-examples.php)** contains worked versions of
+all of these, plus a block variation, a related-posts helper, image preloading, and a snippet
+to clear the cache whenever a post is saved.
+
+---
+
+## ⚡ Performance
 
 ### Caching
 
-The plugin includes built-in caching to improve performance:
+Query results are cached in WordPress transients, with the duration set per shortcode via
+`cache_minutes` (default 15, max 1440). Set `cache_minutes="0"` to disable it.
 
-- Query results are cached using WordPress transients
-- Cache duration is configurable per shortcode
-- Cache is automatically cleared when posts are updated
-- Set `cache_minutes="0"` to disable caching
+> [!NOTE]
+> The cache is **not** invalidated automatically when a post is published or edited — a grid
+> can serve stale results until the transient expires. Deactivating the plugin clears every
+> cached query. To clear it on every post save, use the `save_post` snippet in
+> [`examples/usage-examples.php`](examples/usage-examples.php).
 
-### Optimization Features
+### Optimisations
 
-- Efficient `WP_Query` with minimal meta/term cache
-- Lazy loading images with `loading="lazy"`
-- Responsive images with `srcset` and `sizes`
-- Minimal, scoped CSS to avoid conflicts
-- JavaScript only loaded on admin pages
+- `WP_Query` with post meta and term caches disabled
+- Images lazy-loaded with `loading="lazy"` and responsive `srcset` / `sizes`
+- Minimal, scoped CSS to avoid theme conflicts
+- Admin JavaScript is only enqueued on the Post Poster screen; the frontend script only loads
+  where a `[pp_posts]` shortcode is likely present
 
-## Browser Support
+---
 
-- Modern browsers with CSS Grid support
-- Graceful fallback for older browsers
-- Mobile-responsive design
-- Accessibility compliant (WCAG 2.1 AA)
+## 🩺 Troubleshooting
 
-## Requirements
+| Symptom | Try this |
+| --- | --- |
+| No posts displayed | Check the categories contain published posts, and that you used category **slugs**, not names |
+| Changes don't show up | The transient cache is still warm — set `cache_minutes="0"` while you work |
+| Cards look wrong | Check for theme CSS conflicts with developer tools; try `theme="light"` or `theme="dark"` to pin the palette |
+| Grid doesn't lay out in columns | Your theme's container may be constraining it, or the browser predates CSS Grid |
+| Load More does nothing | Confirm `pagination="load_more"` and check the browser console for a JavaScript error |
 
-- WordPress 6.0 or higher
-- PHP 7.4 or higher
-- Modern theme with CSS Grid support (recommended)
+Still stuck? [Open an issue](https://github.com/SurefireStudios/PostPoster/issues) with your
+WordPress version, theme name, and the exact shortcode you used.
 
-## Troubleshooting
+---
 
-### No Posts Displayed
+## 🧰 Tech stack
 
-1. Check that the selected categories contain published posts
-2. Verify category slugs are correct (not names)
-3. Ensure posts have featured images if `show_image="true"`
-4. Clear cache by setting `cache_minutes="0"` temporarily
+| Layer | Used |
+| --- | --- |
+| Platform | WordPress plugin — plain PHP, no build step, no dependencies |
+| Backend | `WP_Query`, Shortcode API, Transients API, AJAX (`admin-ajax.php`) |
+| Editor | Gutenberg block registered as `post-poster/posts-grid` |
+| Frontend | CSS Grid, vanilla CSS, jQuery for Load More |
+| i18n | `post-poster` text domain with a bundled `.pot` |
 
-### Styling Issues
+### Project structure
 
-1. Check for theme CSS conflicts
-2. Ensure your theme supports CSS Grid
-3. Use browser developer tools to inspect CSS
-4. Try adding `!important` to custom CSS rules
+```
+PostPoster/
+├── post-poster.php            # Plugin header, bootstrap, asset loading, Load More AJAX
+├── uninstall.php              # Removes options, user meta and cached queries on delete
+├── includes/
+│   ├── class-helpers.php      # Attribute sanitising, caching, excerpts
+│   ├── class-query.php        # WP_Query building and pagination markup
+│   ├── class-shortcode.php    # [pp_posts] rendering and template loading
+│   ├── class-admin.php        # Admin screen and shortcode generator
+│   └── class-block.php        # Gutenberg block registration
+├── templates/                 # card.php, wrapper-start.php, wrapper-end.php (overridable)
+├── assets/                    # pp.css, frontend.js, admin.css/js, block.js/css
+├── examples/usage-examples.php
+├── languages/post-poster.pot
+├── LICENSE
+└── README.md
+```
 
-### Performance Issues
+---
 
-1. Enable caching with `cache_minutes="60"`
-2. Limit posts per page (`per_page="6"`)
-3. Optimize images in WordPress Media Library
-4. Consider using a caching plugin
+## 📝 Changelog
 
-## Support
+### `1.0.0`
 
-For support and feature requests, please:
-
-1. Check the documentation and examples above
-2. Search existing issues on GitHub
-3. Create a new issue with detailed information
-4. Include WordPress version, theme name, and plugin settings
-
-## Changelog
-
-### 1.0.0
 - Initial release
-- Core shortcode functionality
-- Admin interface
-- Gutenberg block support
+- `[pp_posts]` shortcode with 18 attributes
+- Admin shortcode generator with live preview
+- Gutenberg block with live preview
+- Numeric and AJAX Load More pagination
 - Template override system
-- Performance optimizations
-- Accessibility features
+- Transient caching, lazy loading, responsive images
+- Light / dark / automatic colour schemes
+- Accessibility features and translation support
 
-## License
+---
 
-GPL v2 or later - see [LICENSE](LICENSE) file for details.
+## 🤝 Contributing
 
-## Credits
+Issues and pull requests are welcome. Useful contributions:
 
-Developed with ❤️ for the WordPress community. Built using WordPress coding standards and best practices.
+- Cache invalidation on post save, built into the plugin
+- Custom post type and taxonomy support
+- Translations — the template is at [`languages/post-poster.pot`](languages/post-poster.pot)
+- Testing reports against current WordPress releases
+
+Follow the existing WordPress conventions: escape on output (`esc_html`, `esc_attr`,
+`esc_url`), sanitize on input, gate admin actions behind a capability check and a nonce, and
+keep new user-facing strings in the `post-poster` text domain.
+
+---
+
+## 📄 License
+
+Released under the **GNU General Public License** — see [LICENSE](LICENSE) for the full text.
+
+---
+
+## 🔗 Links
+
+- 🌐 **Surefire Studios** — <https://www.surefirestudios.io>
+- 🐛 **Issues** — <https://github.com/SurefireStudios/PostPoster/issues>
+
+<div align="center">
+<sub>Built by <a href="https://www.surefirestudios.io">Surefire Studios</a> for the WordPress community.</sub>
+</div>
