@@ -89,13 +89,6 @@
          * Handle successful load more response
          */
         handleLoadMoreSuccess: function(data, $button, $grid) {
-            // Debug logging
-            console.log('Load More Success:', {
-                page: data.page,
-                max_pages: data.max_pages,
-                has_more: data.has_more,
-                posts_loaded: $(data.html).length
-            });
             
             // Append new posts to grid
             var $newPosts = $(data.html);
@@ -112,10 +105,7 @@
             
             // Hide button if no more posts available
             if (!data.has_more) {
-                console.log('Hiding button - no more posts available');
                 this.hideLoadMoreButton($button);
-            } else {
-                console.log('Button remaining - more posts available');
             }
             
             // Trigger custom event

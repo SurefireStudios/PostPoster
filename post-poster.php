@@ -3,7 +3,7 @@
  * Plugin Name: Post Poster
  * Plugin URI: https://github.com/SurefireStudios/PostPoster
  * Description: A powerful WordPress plugin to create layout grids from existing blog posts with customizable shortcodes and grid options.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Surefire Studios
  * Author URI: https://www.surefirestudios.io
  * Text Domain: post-poster
@@ -11,8 +11,8 @@
  * Requires at least: 6.0
  * Tested up to: 6.4
  * Requires PHP: 7.4
- * License: GPL v2 or later
- * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * License: GPLv3 or later
+ * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  *
  * @package PostPoster
  */
@@ -23,7 +23,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('POST_POSTER_VERSION', '1.0.0');
+define('POST_POSTER_VERSION', '1.0.1');
 define('POST_POSTER_PLUGIN_FILE', __FILE__);
 define('POST_POSTER_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('POST_POSTER_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -135,8 +135,12 @@ class PostPoster {
             POST_POSTER_VERSION
         );
         
-        // Only enqueue JS if there might be load more buttons on the page
-        if (has_shortcode(get_post()->post_content ?? '', 'pp_posts') || is_archive() || is_home()) {
+        // Only enqueue JS if there might be load more buttons on the page.
+        // get_post() returns null on 404s and some archive views, so guard the property read.
+        $queried_post = get_post();
+        $post_content = $queried_post ? $queried_post->post_content : '';
+
+        if (has_shortcode($post_content, 'pp_posts') || is_archive() || is_home()) {
             wp_enqueue_script(
                 'post-poster-frontend',
                 POST_POSTER_PLUGIN_URL . 'assets/frontend.js',
@@ -265,15 +269,17 @@ class PostPoster {
         // Check if there are more pages
         $has_more = $page < $query_result['max_num_pages'];
         
-        // Debug logging
-        error_log('PP Load More Debug: ' . wp_json_encode(array(
-            'page' => $page,
-            'max_pages' => $query_result['max_num_pages'],
-            'found_posts' => $query_result['found_posts'],
-            'posts_returned' => count($query_result['posts']),
-            'has_more' => $has_more,
-            'per_page' => $atts['per_page']
-        )));
+        // Debug logging - only when WP_DEBUG is on, never on production sites
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('PP Load More Debug: ' . wp_json_encode(array(
+                'page' => $page,
+                'max_pages' => $query_result['max_num_pages'],
+                'found_posts' => $query_result['found_posts'],
+                'posts_returned' => count($query_result['posts']),
+                'has_more' => $has_more,
+                'per_page' => $atts['per_page']
+            )));
+        }
         
         wp_send_json_success(array(
             'html' => $html,

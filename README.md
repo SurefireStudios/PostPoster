@@ -5,7 +5,8 @@
 **Turn the posts you already have into responsive grid layouts — with a shortcode, a Gutenberg block, or a point-and-click generator in the WordPress admin.**
 
 [![License](https://img.shields.io/github/license/SurefireStudios/PostPoster?color=blue)](LICENSE)
-[![Version 1.0.0](https://img.shields.io/badge/version-1.0.0-0d9488)](post-poster.php)
+[![Lint](https://github.com/SurefireStudios/PostPoster/actions/workflows/lint.yml/badge.svg)](https://github.com/SurefireStudios/PostPoster/actions/workflows/lint.yml)
+[![Version 1.0.1](https://img.shields.io/badge/version-1.0.1-0d9488)](post-poster.php)
 [![WordPress 6.0+](https://img.shields.io/badge/WordPress-6.0%2B-21759b?logo=wordpress&logoColor=white)](https://wordpress.org)
 [![PHP 7.4+](https://img.shields.io/badge/PHP-7.4%2B-777bb4?logo=php&logoColor=white)](https://www.php.net)
 [![Stars](https://img.shields.io/github/stars/SurefireStudios/PostPoster?style=flat)](https://github.com/SurefireStudios/PostPoster/stargazers)
@@ -311,6 +312,9 @@ PostPoster/
 ├── assets/                    # pp.css, frontend.js, admin.css/js, block.js/css
 ├── examples/usage-examples.php
 ├── languages/post-poster.pot
+├── .github/                   # Lint CI and the debug-leftover check
+├── CONTRIBUTING.md
+├── SECURITY.md
 ├── LICENSE
 └── README.md
 ```
@@ -318,6 +322,16 @@ PostPoster/
 ---
 
 ## 📝 Changelog
+
+### `1.0.1`
+
+**Fixes**
+
+- Removed debug logging that ran on **every** Load More request and wrote to the site's PHP error log. The diagnostic is still there, but only when `WP_DEBUG` is enabled.
+- Removed nine `console.log` calls that shipped in the admin and frontend JavaScript.
+- Removed a leftover `pp-debug-theme-*` class that was added to every grid alongside the real `pp-theme-*` class.
+- Guarded a `get_post()` property read that raised *"Attempt to read property on null"* on PHP 8 for any page without a queried post (404s and some archives).
+- Plugin header licence now matches the bundled `LICENSE` (GPLv3 or later).
 
 ### `1.0.0`
 
@@ -342,15 +356,19 @@ Issues and pull requests are welcome. Useful contributions:
 - Translations — the template is at [`languages/post-poster.pot`](languages/post-poster.pot)
 - Testing reports against current WordPress releases
 
-Follow the existing WordPress conventions: escape on output (`esc_html`, `esc_attr`,
-`esc_url`), sanitize on input, gate admin actions behind a capability check and a nonce, and
-keep new user-facing strings in the `post-poster` text domain.
+**[CONTRIBUTING.md](CONTRIBUTING.md)** covers local setup, how the classes fit together, the
+coding conventions, and how to run the same checks CI does. Every push and pull request is
+syntax-checked on PHP 7.4 and 8.3, plus JavaScript, and is rejected if `console.log` or an
+ungated `error_log` reaches shipped code.
+
+> [!CAUTION]
+> Found a security vulnerability? **Don't open a public issue** — follow [SECURITY.md](SECURITY.md) to report it privately.
 
 ---
 
 ## 📄 License
 
-Released under the **GNU General Public License** — see [LICENSE](LICENSE) for the full text.
+Released under the **GNU General Public License v3.0** — see [LICENSE](LICENSE) for the full text.
 
 ---
 

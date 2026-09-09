@@ -1,0 +1,30 @@
+# OS cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*~
+
+# Logs and debug output
+*.log
+error_log
+debug.log
+
+# Build and dependency directories (not used today, ignored if introduced)
+node_modules/
+vendor/
+
+# Note: languages/*.po and *.mo are intentionally NOT ignored - WordPress loads the
+# compiled .mo at runtime, so translations need to ship with the plugin.
+
+# Local environment
+.env
+.env.*
+*.bak
+*.orig

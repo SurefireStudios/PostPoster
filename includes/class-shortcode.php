@@ -84,9 +84,6 @@ class PP_Shortcode {
             $classes[] = 'pp-theme-' . $atts['theme'];
         }
         
-        // Debug: Always add a data attribute to verify the theme setting
-        $classes[] = 'pp-debug-theme-' . $atts['theme'];
-        
         if (!empty($atts['class'])) {
             $classes[] = $atts['class'];
         }

@@ -223,12 +223,8 @@
                 var name = $radio.attr('name');
                 var value = $radio.val();
                 formData[name] = value;
-                console.log('Radio button found:', name, '=', value);
             });
-            
-            // Debug: Log the final form data
-            console.log('Final form data:', formData);
-            
+
             return formData;
         },
         
@@ -236,7 +232,6 @@
          * Build shortcode string
          */
         buildShortcode: function(data) {
-            console.log('Building shortcode with data:', data);
             
             var shortcode = '[pp_posts';
             var defaults = {
@@ -258,18 +253,14 @@
                 theme: 'auto',
                 cache_minutes: '15'
             };
-            
-            console.log('Using defaults:', defaults);
-            
+
             for (var key in data) {
                 if (data.hasOwnProperty(key) && data[key] !== '' && data[key] !== defaults[key]) {
-                    console.log('Adding to shortcode:', key, '=', data[key], '(default was:', defaults[key] + ')');
                     shortcode += ' ' + key + '="' + this.escapeAttribute(data[key]) + '"';
                 }
             }
             
             shortcode += ']';
-            console.log('Final shortcode:', shortcode);
             return shortcode;
         },
         
