@@ -3,7 +3,7 @@
  * Plugin Name: Post Poster
  * Plugin URI: https://github.com/SurefireStudios/PostPoster
  * Description: A powerful WordPress plugin to create layout grids from existing blog posts with customizable shortcodes and grid options.
- * Version: 1.0.1
+ * Version: 1.1.0
  * Author: Surefire Studios
  * Author URI: https://www.surefirestudios.io
  * Text Domain: post-poster
@@ -23,7 +23,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('POST_POSTER_VERSION', '1.0.1');
+define('POST_POSTER_VERSION', '1.1.0');
 define('POST_POSTER_PLUGIN_FILE', __FILE__);
 define('POST_POSTER_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('POST_POSTER_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -87,6 +87,7 @@ class PostPoster {
      */
     private function includes() {
         require_once POST_POSTER_PLUGIN_DIR . 'includes/class-helpers.php';
+        require_once POST_POSTER_PLUGIN_DIR . 'includes/class-cache.php';
         require_once POST_POSTER_PLUGIN_DIR . 'includes/class-query.php';
         require_once POST_POSTER_PLUGIN_DIR . 'includes/class-shortcode.php';
         require_once POST_POSTER_PLUGIN_DIR . 'includes/class-admin.php';
@@ -104,6 +105,9 @@ class PostPoster {
         
         // Initialize shortcode
         new PP_Shortcode();
+
+        // Initialize cache invalidation
+        new PP_Cache();
         
         // Initialize Gutenberg block
         new PP_Block();
@@ -204,6 +208,7 @@ class PostPoster {
         // Set default options
         add_option('pp_settings', array(
             'cache_minutes' => 15,
+            'auto_clear_cache' => true,
             'default_columns' => 3,
             'default_per_page' => 9,
             'default_image_ratio' => '16x9',

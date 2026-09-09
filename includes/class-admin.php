@@ -65,6 +65,9 @@ class PP_Admin {
         if (!PP_Helpers::user_can('manage_options')) {
             wp_die(__('You do not have sufficient permissions to access this page.', 'post-poster'));
         }
+
+        // Handle the cache settings form
+        $this->handle_cache_settings_post();
         
         // Get current user settings
         $user_id = get_current_user_id();
@@ -100,6 +103,7 @@ class PP_Admin {
         ?>
         <div class="wrap">
             <h1><?php esc_html_e('Post Poster - Shortcode Generator', 'post-poster'); ?></h1>
+            <?php settings_errors('pp_cache'); ?>
             
             <div class="pp-admin-container">
                 <div class="pp-admin-form">
@@ -321,12 +325,84 @@ class PP_Admin {
                         <h3><?php esc_html_e('Preview', 'post-poster'); ?></h3>
                         <div id="pp_preview_content"></div>
                     </div>
+
+                    <div class="pp-cache-settings">
+                        <h3><?php esc_html_e('Cache Settings', 'post-poster'); ?></h3>
+                        <form method="post" action="">
+                            <?php wp_nonce_field('pp_cache_settings', 'pp_cache_nonce'); ?>
+                            <p>
+                                <label>
+                                    <input type="checkbox" name="auto_clear_cache" value="1" <?php checked(PP_Cache::is_enabled()); ?>>
+                                    <?php esc_html_e('Clear cached grids automatically when a post is published, updated, trashed or deleted', 'post-poster'); ?>
+                                </label>
+                            </p>
+                            <p class="description">
+                                <?php esc_html_e('Recommended. With this off, a grid keeps serving its cached results until the cache duration expires, so new or edited posts may not appear straight away.', 'post-poster'); ?>
+                            </p>
+                            <p class="submit">
+                                <button type="submit" name="pp_cache_action" value="save" class="button button-primary">
+                                    <?php esc_html_e('Save Cache Settings', 'post-poster'); ?>
+                                </button>
+                                <button type="submit" name="pp_cache_action" value="clear" class="button button-secondary">
+                                    <?php esc_html_e('Clear Cache Now', 'post-poster'); ?>
+                                </button>
+                            </p>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
         <?php
     }
     
+    /**
+     * Handle the cache settings form submission
+     */
+    private function handle_cache_settings_post() {
+        if (!isset($_POST['pp_cache_action'])) {
+            return;
+        }
+
+        if (!PP_Helpers::user_can('manage_options')) {
+            wp_die(__('You do not have sufficient permissions to access this page.', 'post-poster'));
+        }
+
+        if (!isset($_POST['pp_cache_nonce']) || !PP_Helpers::verify_nonce($_POST['pp_cache_nonce'], 'pp_cache_settings')) {
+            wp_die(__('Security check failed.', 'post-poster'));
+        }
+
+        $action = sanitize_key($_POST['pp_cache_action']);
+
+        if ('clear' === $action) {
+            PP_Cache::force_clear();
+            add_settings_error(
+                'pp_cache',
+                'pp_cache_cleared',
+                __('Cached grids cleared.', 'post-poster'),
+                'success'
+            );
+            return;
+        }
+
+        if ('save' === $action) {
+            $settings = get_option(PP_Cache::SETTINGS_OPTION, array());
+
+            if (!is_array($settings)) {
+                $settings = array();
+            }
+
+            $settings['auto_clear_cache'] = !empty($_POST['auto_clear_cache']);
+            update_option(PP_Cache::SETTINGS_OPTION, $settings);
+
+            add_settings_error(
+                'pp_cache',
+                'pp_cache_saved',
+                __('Cache settings saved.', 'post-poster'),
+                'success'
+            );
+        }
+    }
+
     /**
      * AJAX handler for shortcode preview
      */

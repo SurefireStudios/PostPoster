@@ -1,249 +1,425 @@
-# Copyright (C) 2024 Post Poster
-# This file is distributed under the same license as the Post Poster package.
+# Copyright (C) Surefire Studios
+# This file is distributed under the GPLv3 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Post Poster 1.0.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/post-poster\n"
-"POT-Creation-Date: 2024-01-01 00:00:00+00:00\n"
+"Project-Id-Version: Post Poster 1.1.0\n"
+"Report-Msgid-Bugs-To: https://github.com/SurefireStudios/PostPoster/issues\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"X-Domain: post-poster\n"
 
-#: includes/class-admin.php:45
-msgid "Post Poster Settings"
-msgstr ""
-
-#: includes/class-admin.php:46
+#: includes/class-admin.php:33
+#: includes/class-admin.php:34
 msgid "Post Poster"
 msgstr ""
 
-#: includes/class-admin.php:57
+#: includes/class-admin.php:45
+#: includes/class-admin.php:46
+msgid "Shortcode Generator"
+msgstr ""
+
+#: includes/class-admin.php:66
+#: includes/class-admin.php:367
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: includes/class-admin.php:77
+#: includes/class-admin.php:105
 msgid "Post Poster - Shortcode Generator"
 msgstr ""
 
-#: includes/class-admin.php:86
+#: includes/class-admin.php:114
+#: assets/block.js:107
 msgid "Content Selection"
 msgstr ""
 
-#: includes/class-admin.php:89
+#: includes/class-admin.php:118
+#: includes/class-block.php:167
 msgid "Categories"
 msgstr ""
 
-#: includes/class-admin.php:90
+#: includes/class-admin.php:119
 msgid "Select one or more categories. Leave empty to show posts from all categories."
 msgstr ""
 
-#: includes/class-admin.php:104
+#: includes/class-admin.php:136
+#: includes/class-block.php:169
 msgid "Posts per page"
 msgstr ""
 
-#: includes/class-admin.php:105
+#: includes/class-admin.php:137
 msgid "Number of posts to display (1-50)"
 msgstr ""
 
-#: includes/class-admin.php:110
+#: includes/class-admin.php:144
+#: includes/class-block.php:174
 msgid "Order by"
 msgstr ""
 
-#: includes/class-admin.php:113
+#: includes/class-admin.php:147
+#: includes/class-block.php:184
 msgid "Date"
 msgstr ""
 
-#: includes/class-admin.php:114
+#: includes/class-admin.php:148
+#: includes/class-block.php:185
 msgid "Title"
 msgstr ""
 
-#: includes/class-admin.php:115
+#: includes/class-admin.php:149
+#: includes/class-block.php:186
 msgid "Modified"
 msgstr ""
 
-#: includes/class-admin.php:116
+#: includes/class-admin.php:150
+#: includes/class-block.php:187
 msgid "Random"
 msgstr ""
 
-#: includes/class-admin.php:117
+#: includes/class-admin.php:151
+#: includes/class-block.php:188
 msgid "Comment Count"
 msgstr ""
 
-#: includes/class-admin.php:122
+#: includes/class-admin.php:157
+#: includes/class-block.php:175
 msgid "Sort order"
 msgstr ""
 
-#: includes/class-admin.php:125
+#: includes/class-admin.php:160
+#: includes/class-block.php:191
 msgid "Descending"
 msgstr ""
 
-#: includes/class-admin.php:126
+#: includes/class-admin.php:161
+#: includes/class-block.php:192
 msgid "Ascending"
 msgstr ""
 
-#: includes/class-admin.php:132
+#: includes/class-admin.php:167
+#: assets/block.js:157
 msgid "Layout Options"
 msgstr ""
 
-#: includes/class-admin.php:135
+#: includes/class-admin.php:170
+#: includes/class-admin.php:180
+#: includes/class-block.php:168
 msgid "Columns"
 msgstr ""
 
-#: includes/class-admin.php:141
+#: includes/class-admin.php:180
 msgid "Column"
 msgstr ""
 
-#: includes/class-admin.php:141
-msgid "Columns"
-msgstr ""
-
-#: includes/class-admin.php:147
+#: includes/class-admin.php:188
 msgid "Gutter size (px)"
 msgstr ""
 
-#: includes/class-admin.php:148
+#: includes/class-admin.php:189
 msgid "Space between cards in pixels"
 msgstr ""
 
-#: includes/class-admin.php:154
+#: includes/class-admin.php:197
+#: includes/class-block.php:177
 msgid "Image ratio"
 msgstr ""
 
-#: includes/class-admin.php:157
+#: includes/class-admin.php:200
 msgid "Widescreen"
 msgstr ""
 
-#: includes/class-admin.php:158
+#: includes/class-admin.php:201
 msgid "Standard"
 msgstr ""
 
-#: includes/class-admin.php:159
+#: includes/class-admin.php:202
 msgid "Square"
 msgstr ""
 
-#: includes/class-admin.php:160
+#: includes/class-admin.php:203
+#: includes/class-block.php:202
 msgid "Auto"
 msgstr ""
 
-#: includes/class-admin.php:166
-msgid "Display Options"
-msgstr ""
-
-#: includes/class-admin.php:171
-msgid "Show featured image"
-msgstr ""
-
-#: includes/class-admin.php:177
-msgid "Show post title"
-msgstr ""
-
-#: includes/class-admin.php:183
-msgid "Show excerpt"
-msgstr ""
-
-#: includes/class-admin.php:189
-msgid "Excerpt length (words)"
-msgstr ""
-
-#: includes/class-admin.php:196
-msgid "Advanced Options"
-msgstr ""
-
-#: includes/class-admin.php:199
-msgid "Pagination"
-msgstr ""
-
-#: includes/class-admin.php:202
-msgid "None"
-msgstr ""
-
-#: includes/class-admin.php:203
-msgid "Numeric"
-msgstr ""
-
-#: includes/class-admin.php:208
-msgid "Cache duration (minutes)"
-msgstr ""
-
 #: includes/class-admin.php:209
-msgid "Cache results for better performance. Set to 0 to disable."
+msgid "Theme"
 msgstr ""
 
-#: includes/class-admin.php:212
-msgid "No cache"
+#: includes/class-admin.php:210
+msgid "Choose between light and dark card themes"
 msgstr ""
 
 #: includes/class-admin.php:213
-msgid "minutes"
+msgid "Auto (Follow site theme)"
 msgstr ""
 
 #: includes/class-admin.php:214
-msgid "hour"
+msgid "Light"
 msgstr ""
 
 #: includes/class-admin.php:215
-msgid "hours"
+msgid "Dark"
 msgstr ""
 
 #: includes/class-admin.php:221
-msgid "Preview"
+#: assets/block.js:189
+msgid "Display Options"
 msgstr ""
 
-#: includes/class-admin.php:224
-msgid "Generate Shortcode"
+#: includes/class-admin.php:226
+#: includes/class-block.php:170
+msgid "Show featured image"
 msgstr ""
 
-#: includes/class-admin.php:231
-msgid "Generated Shortcode"
+#: includes/class-admin.php:233
+#: includes/class-block.php:171
+msgid "Show post title"
 msgstr ""
 
-#: includes/class-admin.php:234
-msgid "Click \"Generate Shortcode\" to create your shortcode..."
+#: includes/class-admin.php:240
+#: includes/class-block.php:172
+msgid "Show excerpt"
 msgstr ""
 
-#: includes/class-admin.php:236
-msgid "Copy"
+#: includes/class-admin.php:246
+#: includes/class-block.php:173
+msgid "Excerpt length (words)"
 msgstr ""
 
-#: includes/class-admin.php:242
-msgid "Preview"
+#: includes/class-admin.php:254
+msgid "Show post date"
 msgstr ""
 
-#: includes/class-admin.php:252
-msgid "Security check failed."
+#: includes/class-admin.php:261
+msgid "Show author"
+msgstr ""
+
+#: includes/class-admin.php:268
+msgid "Show categories"
+msgstr ""
+
+#: includes/class-admin.php:274
+#: assets/block.js:225
+msgid "Advanced Options"
+msgstr ""
+
+#: includes/class-admin.php:278
+#: includes/class-block.php:176
+msgid "Pagination"
+msgstr ""
+
+#: includes/class-admin.php:281
+#: includes/class-block.php:195
+msgid "None"
+msgstr ""
+
+#: includes/class-admin.php:282
+#: includes/class-block.php:196
+msgid "Numeric"
+msgstr ""
+
+#: includes/class-admin.php:283
+msgid "Load More Button"
+msgstr ""
+
+#: includes/class-admin.php:289
+#: includes/class-block.php:179
+msgid "Cache duration (minutes)"
+msgstr ""
+
+#: includes/class-admin.php:290
+msgid "Cache results for better performance. Set to 0 to disable."
+msgstr ""
+
+#: includes/class-admin.php:293
+#: includes/class-block.php:205
+msgid "No cache"
+msgstr ""
+
+#: includes/class-admin.php:294
+msgid "minutes"
 msgstr ""
 
 #: includes/class-admin.php:295
+msgid "hour"
+msgstr ""
+
+#: includes/class-admin.php:296
+#: includes/class-admin.php:297
+msgid "hours"
+msgstr ""
+
+#: includes/class-admin.php:304
+#: includes/class-admin.php:325
+#: includes/class-shortcode.php:311
+msgid "Preview"
+msgstr ""
+
+#: includes/class-admin.php:307
+msgid "Generate Shortcode"
+msgstr ""
+
+#: includes/class-admin.php:315
+msgid "Generated Shortcode"
+msgstr ""
+
+#: includes/class-admin.php:317
+msgid "Click \"Generate Shortcode\" to create your shortcode..."
+msgstr ""
+
+#: includes/class-admin.php:319
+msgid "Copy"
+msgstr ""
+
+#: includes/class-admin.php:330
+msgid "Cache Settings"
+msgstr ""
+
+#: includes/class-admin.php:336
+msgid "Clear cached grids automatically when a post is published, updated, trashed or deleted"
+msgstr ""
+
+#: includes/class-admin.php:340
+msgid "Recommended. With this off, a grid keeps serving its cached results until the cache duration expires, so new or edited posts may not appear straight away."
+msgstr ""
+
+#: includes/class-admin.php:344
+msgid "Save Cache Settings"
+msgstr ""
+
+#: includes/class-admin.php:347
+msgid "Clear Cache Now"
+msgstr ""
+
+#: includes/class-admin.php:371
+#: includes/class-admin.php:412
+#: includes/class-admin.php:445
+#: post-poster.php:239
+msgid "Security check failed."
+msgstr ""
+
+#: includes/class-admin.php:381
+msgid "Cached grids cleared."
+msgstr ""
+
+#: includes/class-admin.php:400
+msgid "Cache settings saved."
+msgstr ""
+
+#: includes/class-admin.php:468
 msgid "Settings saved."
 msgstr ""
 
-#: includes/class-query.php:152
+#: includes/class-block.php:165
+msgid "Post Poster Grid"
+msgstr ""
+
+#: includes/class-block.php:166
+msgid "Display posts in a customizable grid layout"
+msgstr ""
+
+#: includes/class-block.php:178
+msgid "Gutter size"
+msgstr ""
+
+#: includes/class-block.php:180
+msgid "No posts found matching the criteria."
+msgstr ""
+
+#: includes/class-block.php:199
+msgid "16:9 (Widescreen)"
+msgstr ""
+
+#: includes/class-block.php:200
+msgid "4:3 (Standard)"
+msgstr ""
+
+#: includes/class-block.php:201
+msgid "1:1 (Square)"
+msgstr ""
+
+#: includes/class-block.php:206
+msgid "15 minutes"
+msgstr ""
+
+#: includes/class-block.php:207
+msgid "1 hour"
+msgstr ""
+
+#: includes/class-block.php:208
+msgid "4 hours"
+msgstr ""
+
+#: includes/class-block.php:209
+msgid "24 hours"
+msgstr ""
+
+#: includes/class-query.php:149
 msgid "&laquo; Previous"
 msgstr ""
 
-#: includes/class-query.php:153
+#: includes/class-query.php:150
 msgid "Next &raquo;"
 msgstr ""
 
-#: includes/class-query.php:167
+#: includes/class-query.php:168
 msgid "Posts navigation"
 msgstr ""
 
-#: includes/class-shortcode.php:244
+#: includes/class-query.php:218
+#: post-poster.php:160
+msgid "Load More Posts"
+msgstr ""
+
+#: includes/class-query.php:219
+#: post-poster.php:161
+msgid "Loading..."
+msgstr ""
+
+#: includes/class-shortcode.php:252
 msgid "No posts found matching the specified criteria."
 msgstr ""
 
-#: post-poster.php:74
+#: post-poster.php:162
+msgid "No more posts to load"
+msgstr ""
+
+#: post-poster.php:163
+msgid "Error loading posts"
+msgstr ""
+
+#: post-poster.php:198
 msgid "Shortcode copied to clipboard!"
 msgstr ""
 
-#: post-poster.php:75
+#: post-poster.php:199
 msgid "Error copying shortcode"
 msgstr ""
 
-#: templates/card.php:73
+#: post-poster.php:247
+msgid "Invalid request."
+msgstr ""
+
+#: post-poster.php:253
+msgid "Invalid attributes."
+msgstr ""
+
+#: post-poster.php:263
+msgid "No more posts found."
+msgstr ""
+
+#: templates/card.php:75
+msgid "Read More"
+msgstr ""
+
+#: templates/card.php:88
+msgid "by"
+msgstr ""
+
+#: templates/card.php:97
 msgid "in"
+msgstr ""
+
+#: assets/block.js:293
+msgid "Loading posts..."
 msgstr ""

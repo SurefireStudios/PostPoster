@@ -18,6 +18,7 @@ function post_poster_uninstall() {
     
     // Remove plugin options
     delete_option('pp_settings');
+    delete_option('pp_cache_keys');
     
     // Remove user meta (last settings)
     $wpdb->query("DELETE FROM {$wpdb->usermeta} WHERE meta_key = 'pp_last_settings'");

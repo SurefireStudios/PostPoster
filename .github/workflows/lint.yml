@@ -45,6 +45,9 @@ jobs:
           echo "Checked $count PHP file(s) on PHP ${{ matrix.php }}."
           exit $status
 
+      - name: Run the cache invalidation tests
+        run: php tests/test-cache.php
+
   javascript:
     name: javascript
     runs-on: ubuntu-latest

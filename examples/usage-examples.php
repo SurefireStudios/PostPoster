@@ -315,12 +315,30 @@ function get_related_posts_widget($post_id, $limit = 3) {
     return $output;
 }
 
-// Custom cache clearing
-function clear_pp_cache_on_post_update($post_id) {
-    // Clear plugin cache when posts are updated
-    PP_Helpers::clear_all_cache();
+// Cache clearing
+//
+// Since 1.1.0 the plugin clears cached grids itself whenever a post is published,
+// updated, trashed or deleted. You can turn that off under Post Poster > Cache Settings.
+// You only need something like the below if you want to clear on some other event.
+
+// Clear the cache when a term is renamed, for example.
+function clear_pp_cache_on_term_change($term_id) {
+    PP_Cache::force_clear();
 }
-add_action('save_post', 'clear_pp_cache_on_post_update');
+add_action('edited_category', 'clear_pp_cache_on_term_change');
+
+// Extend which post types invalidate the cache (useful with the pp_query_args filter).
+function pp_watch_more_post_types($post_types) {
+    $post_types[] = 'product';
+    return $post_types;
+}
+add_filter('pp_cache_invalidation_post_types', 'pp_watch_more_post_types');
+
+// React to the cache being cleared.
+function log_pp_cache_cleared() {
+    // e.g. purge a page cache plugin or CDN here
+}
+add_action('pp_cache_cleared', 'log_pp_cache_cleared');
 
 // Get popular posts for sidebar
 function get_popular_posts_sidebar() {

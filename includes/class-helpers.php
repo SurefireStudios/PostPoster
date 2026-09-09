@@ -14,7 +14,17 @@ if (!defined('ABSPATH')) {
  * Helper class
  */
 class PP_Helpers {
-    
+
+    /**
+     * Option name holding the list of cache keys currently in use.
+     */
+    const CACHE_KEY_INDEX = 'pp_cache_keys';
+
+    /**
+     * Maximum number of cache keys tracked in the index.
+     */
+    const CACHE_KEY_INDEX_LIMIT = 500;
+
     /**
      * Sanitize shortcode attributes
      *
@@ -142,28 +152,81 @@ class PP_Helpers {
     public static function cache_query($cache_key, $data, $cache_minutes) {
         if ($cache_minutes > 0) {
             set_transient($cache_key, $data, $cache_minutes * MINUTE_IN_SECONDS);
+            self::remember_cache_key($cache_key);
         }
     }
-    
+
+    /**
+     * Record a cache key so it can be deleted later.
+     *
+     * With a persistent object cache (Redis, Memcached) transients never reach the options
+     * table, so deleting rows from wp_options would not clear them. Keeping an index of the
+     * keys lets clear_all_cache() call delete_transient(), which works with either backend.
+     *
+     * @param string $cache_key Cache key
+     */
+    private static function remember_cache_key($cache_key) {
+        $keys = get_option(self::CACHE_KEY_INDEX, array());
+
+        if (!is_array($keys)) {
+            $keys = array();
+        }
+
+        if (in_array($cache_key, $keys, true)) {
+            return;
+        }
+
+        $keys[] = $cache_key;
+
+        // Keep the index bounded. Older keys still expire on their own, and the options
+        // sweep in clear_all_cache() catches any that fall off the list.
+        if (count($keys) > self::CACHE_KEY_INDEX_LIMIT) {
+            $keys = array_slice($keys, -self::CACHE_KEY_INDEX_LIMIT);
+        }
+
+        update_option(self::CACHE_KEY_INDEX, $keys, false);
+    }
+
     /**
      * Clear all plugin cache
+     *
+     * @return int Number of cached queries removed via the key index
      */
     public static function clear_all_cache() {
         global $wpdb;
-        
+
+        $cleared = 0;
+
+        // Preferred path: works with both database and persistent object caches.
+        $keys = get_option(self::CACHE_KEY_INDEX, array());
+
+        if (is_array($keys)) {
+            foreach ($keys as $cache_key) {
+                if (delete_transient($cache_key)) {
+                    $cleared++;
+                }
+            }
+        }
+
+        delete_option(self::CACHE_KEY_INDEX);
+
+        // Fallback sweep for anything not in the index, including keys written by
+        // versions of the plugin before the index existed.
         $wpdb->query(
             $wpdb->prepare(
                 "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
                 '_transient_pp_query_%'
             )
         );
-        
+
         $wpdb->query(
             $wpdb->prepare(
                 "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
                 '_transient_timeout_pp_query_%'
             )
         );
+
+        return $cleared;
     }
     
     /**

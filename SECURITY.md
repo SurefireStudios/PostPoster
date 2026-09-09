@@ -7,8 +7,8 @@ AJAX endpoint to unauthenticated visitors. Security reports are taken seriously.
 
 | Version | Status |
 | --- | --- |
-| `1.0.1` | ✅ Supported |
-| `1.0.0` | ❌ Superseded — upgrade to `1.0.1` |
+| `1.1.0` | ✅ Supported |
+| `< 1.1.0` | ❌ Superseded — upgrade to `1.1.0` |
 
 Fixes land on the latest release only.
 

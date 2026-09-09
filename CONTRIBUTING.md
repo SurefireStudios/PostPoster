@@ -7,10 +7,6 @@ Found a **security vulnerability**? Do not open a public issue — follow
 
 ## Good first contributions
 
-- **Cache invalidation on post save**, built into the plugin. Right now the transient cache
-  only clears on deactivation, so a grid can serve stale results until it expires. There is a
-  working `save_post` snippet in [`examples/usage-examples.php`](examples/usage-examples.php)
-  that could become a proper feature (with a setting to turn it off).
 - **Custom post type and taxonomy support** — the query is currently posts and categories only.
 - **Translations.** The template is at `languages/post-poster.pot`.
 - **Testing reports** against current WordPress releases; the header says *Tested up to 6.4*.
@@ -44,7 +40,8 @@ is useful when working on pagination.
 | `includes/class-helpers.php` | Attribute defaults and sanitising, caching, excerpts |
 | `includes/class-query.php` | Builds `WP_Query` args, renders pagination |
 | `includes/class-shortcode.php` | `[pp_posts]` rendering, template lookup |
-| `includes/class-admin.php` | Admin screen and shortcode generator |
+| `includes/class-admin.php` | Admin screen, shortcode generator, cache settings |
+| `includes/class-cache.php` | Clears cached grids when posts change |
 | `includes/class-block.php` | Gutenberg block registration |
 | `templates/` | `card.php`, `wrapper-start.php`, `wrapper-end.php` — themes can override these |
 
@@ -85,13 +82,24 @@ wp i18n make-pot . languages/post-poster.pot
    ```bash
    for f in assets/*.js; do node --check "$f"; done
    ```
-2. **Test in a real WordPress install.** At minimum: the plugin activates without notices, the
+2. **Run the tests.** The cache invalidation logic has a test suite that stubs WordPress, so
+   it needs no database and runs in a second:
+   ```bash
+   php tests/test-cache.php
+   ```
+   CI runs it on both PHP versions. If you touch `class-cache.php` or the caching helpers,
+   add a case.
+3. **Test in a real WordPress install.** At minimum: the plugin activates without notices, the
    generator produces a working shortcode, the block previews, and a grid renders with both
    `numeric` and `load_more` pagination.
-3. **Describe your change** — what it fixes, plus the WordPress and PHP versions you tested.
+4. **Describe your change** — what it fixes, plus the WordPress and PHP versions you tested.
 
 Keep one logical change per pull request, and prefer a small, reviewable diff over a reformat.
-Note that the source files use CRLF line endings; please don't convert them.
+
+The repository stores **LF** line endings. On Windows, `core.autocrlf=true` will check the
+files out as CRLF and convert them back on commit, which is fine — just make sure a pull
+request doesn't contain line-ending-only changes, since they turn a three-line fix into a
+whole-file diff.
 
 ## Reporting a bug
 

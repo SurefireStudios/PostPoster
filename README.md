@@ -6,7 +6,7 @@
 
 [![License](https://img.shields.io/github/license/SurefireStudios/PostPoster?color=blue)](LICENSE)
 [![Lint](https://github.com/SurefireStudios/PostPoster/actions/workflows/lint.yml/badge.svg)](https://github.com/SurefireStudios/PostPoster/actions/workflows/lint.yml)
-[![Version 1.0.1](https://img.shields.io/badge/version-1.0.1-0d9488)](post-poster.php)
+[![Version 1.1.0](https://img.shields.io/badge/version-1.1.0-0d9488)](post-poster.php)
 [![WordPress 6.0+](https://img.shields.io/badge/WordPress-6.0%2B-21759b?logo=wordpress&logoColor=white)](https://wordpress.org)
 [![PHP 7.4+](https://img.shields.io/badge/PHP-7.4%2B-777bb4?logo=php&logoColor=white)](https://www.php.net)
 [![Stars](https://img.shields.io/github/stars/SurefireStudios/PostPoster?style=flat)](https://github.com/SurefireStudios/PostPoster/stargazers)
@@ -39,7 +39,7 @@ transient, rendered through templates your theme can override.
 - **Light, dark or automatic** — a `theme` option that can follow the visitor's `prefers-color-scheme`
 - **Shortcode generator** — build a shortcode from a form in the admin, with a live preview and copy-to-clipboard
 - **Gutenberg block** — *Post Poster Grid*, with a live preview and sidebar controls
-- **Built-in caching** — query results stored in transients, per-shortcode duration
+- **Built-in caching** — query results stored in transients, per-shortcode duration, cleared automatically when posts change
 - **Theme integration** — override any template from your theme; scoped `pp-` CSS classes
 - **Accessibility** — semantic markup, ARIA labels, keyboard navigation
 - **Developer friendly** — actions and filters, plus a file of worked examples
@@ -240,6 +240,27 @@ add_filter('pp_query_args', function ($args, $atts) {
 add_filter('pp_no_posts_message', function ($message) {
     return 'Nothing here yet.';
 });
+
+// Choose which post types invalidate cached grids (default: ['post'])
+add_filter('pp_cache_invalidation_post_types', function ($post_types) {
+    $post_types[] = 'product';
+    return $post_types;
+});
+```
+
+There is also a `pp_cache_cleared` action, fired whenever cached grids are cleared — handy for
+purging a page cache or CDN at the same time:
+
+```php
+add_action('pp_cache_cleared', function () {
+    // purge your page cache here
+});
+```
+
+To clear the cache from your own code:
+
+```php
+PP_Cache::force_clear();
 ```
 
 📄 **[`examples/usage-examples.php`](examples/usage-examples.php)** contains worked versions of
@@ -255,11 +276,22 @@ to clear the cache whenever a post is saved.
 Query results are cached in WordPress transients, with the duration set per shortcode via
 `cache_minutes` (default 15, max 1440). Set `cache_minutes="0"` to disable it.
 
-> [!NOTE]
-> The cache is **not** invalidated automatically when a post is published or edited — a grid
-> can serve stale results until the transient expires. Deactivating the plugin clears every
-> cached query. To clear it on every post save, use the `save_post` snippet in
-> [`examples/usage-examples.php`](examples/usage-examples.php).
+Cached grids are cleared automatically whenever a post is **published, updated, trashed,
+untrashed or deleted**, so an edit shows up straight away. The work runs once per request, so
+a bulk edit or an import doesn't repeat it per post.
+
+You can turn this off, or clear the cache by hand, under **Post Poster → Cache Settings**:
+
+| Control | What it does |
+| --- | --- |
+| *Clear cached grids automatically…* | On by default. Turn off if you'd rather rely purely on `cache_minutes` expiry |
+| **Clear Cache Now** | Clears every cached grid immediately, regardless of the setting |
+
+Deactivating the plugin also clears every cached query.
+
+> [!TIP]
+> Cache clearing uses `delete_transient()` against a tracked key index, so it works whether
+> transients live in the database or in a persistent object cache such as Redis or Memcached.
 
 ### Optimisations
 
@@ -306,11 +338,13 @@ PostPoster/
 │   ├── class-helpers.php      # Attribute sanitising, caching, excerpts
 │   ├── class-query.php        # WP_Query building and pagination markup
 │   ├── class-shortcode.php    # [pp_posts] rendering and template loading
-│   ├── class-admin.php        # Admin screen and shortcode generator
+│   ├── class-admin.php        # Admin screen, shortcode generator, cache settings
+│   ├── class-cache.php        # Cache invalidation on post changes
 │   └── class-block.php        # Gutenberg block registration
 ├── templates/                 # card.php, wrapper-start.php, wrapper-end.php (overridable)
 ├── assets/                    # pp.css, frontend.js, admin.css/js, block.js/css
 ├── examples/usage-examples.php
+├── tests/test-cache.php       # Cache invalidation tests (no WordPress needed)
 ├── languages/post-poster.pot
 ├── .github/                   # Lint CI and the debug-leftover check
 ├── CONTRIBUTING.md
@@ -322,6 +356,20 @@ PostPoster/
 ---
 
 ## 📝 Changelog
+
+### `1.1.0`
+
+**Automatic cache invalidation**
+
+- Cached grids are now cleared whenever a post is **published, updated, trashed, untrashed or deleted**. Previously a grid could serve stale results until its cache duration expired, which read as the plugin being broken.
+- New **Cache Settings** panel on the admin screen: a toggle for the automatic clearing (on by default, including on existing installs) and a **Clear Cache Now** button.
+- Revisions and autosaves are ignored, and the clear runs at most once per request so bulk edits and imports don't repeat it per post.
+- New `pp_cache_invalidation_post_types` filter and `pp_cache_cleared` action.
+
+**Fixes**
+
+- Cache clearing now works on sites with a **persistent object cache**. It previously only deleted rows from `wp_options`, which does nothing when Redis or Memcached is handling transients. A tracked key index means `delete_transient()` is used instead, with the old options sweep kept as a fallback.
+- `uninstall.php` removes the new cache key index option.
 
 ### `1.0.1`
 
@@ -351,7 +399,6 @@ PostPoster/
 
 Issues and pull requests are welcome. Useful contributions:
 
-- Cache invalidation on post save, built into the plugin
 - Custom post type and taxonomy support
 - Translations — the template is at [`languages/post-poster.pot`](languages/post-poster.pot)
 - Testing reports against current WordPress releases
